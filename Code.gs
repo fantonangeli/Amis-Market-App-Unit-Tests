@@ -3,12 +3,17 @@ Q.helpers( this );
 function tests(){
   Utility();
   ForecastUtility();
+  Seasons();
+  AmisRange();
+  FirebaseConnector();
 }
 
 function doGet( e ) {
    Q.urlParams( e.parameter );
    Q.config( {
-      title: "QUnit for AmisMarketApp" // Sets the title of the test page.
+      title: "QUnit for AmisMarketApp", // Sets the title of the test page.
+     hidepassed: true,
+     notrycatch: false
    } );
    Q.load(tests);
 
