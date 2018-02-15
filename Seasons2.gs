@@ -1,25 +1,36 @@
 function Seasons() {
   showTitle(arguments.callee.name);
-  
-     var orig_getSheetConfig=AmisMarketApp.FirebaseConnector.getSheetConfig;
+ 
 
-     AmisMarketApp.FirebaseConnector.getSheetConfig=function(){
-       return {year:2016};
-     };            
-     
-     Q.module(arguments.callee.name, {
+     Q.module(arguments.callee.name,{
        after:function(){
-         AmisMarketApp.FirebaseConnector.getSheetConfig=orig_getSheetConfig;
+      AmisMarketApp.FirebaseConnector.getFireBaseData=getFireBaseData;
+      AmisMarketApp.FirebaseConnector.getSheetConfig=getSheetConfig;
+      AmisMarketApp.FirebaseConnector.getFireBaseDataParsed=getFireBaseDataParsed;
        }
-     });  
-
+     });
+      var getFireBaseData=AmisMarketApp.FirebaseConnector.getFireBaseData;
+      var getSheetConfig=AmisMarketApp.FirebaseConnector.getSheetConfig;
+      var getFireBaseDataParsed=AmisMarketApp.FirebaseConnector.getFireBaseDataParsed;
+     
+     AmisMarketApp.FirebaseConnector.getFireBaseData=AmisMarketApp.FirebaseConnector.getFireBaseDataParsed=function(){
+       return {master:123};
+     }; 
+     
+     
+     AmisMarketApp.FirebaseConnector.getSheetConfig=function(sheetId, userToken){
+       if(sheetId=="test2017"){ return {year: 2017};}
+       else if(sheetId=="test2018"){ return {year: 2018};}
+       else if(sheetId=="123") return {year:2018};
+       return null;
+     }; 
   
   
   
   
   
   
-   function getYearOfSeason() {
+   function getCurrentYearOfSeason() {
      Q.module(arguments.callee.name);
      var f = AmisMarketApp.Seasons.getCurrentYearOfSeason;
      
@@ -40,7 +51,7 @@ function Seasons() {
       } );
      
       Q.test( "trues", function( assert ) {
-        assert.ok( f("noid",123)==2016);
+        assert.ok( f("test2017","123")==2017);
       } );
 
   };
@@ -178,7 +189,7 @@ function Seasons() {
           assert.ok(/year$/.test(sheetConfigNode));
         };
         
-        f(SpreadsheetApp.getActiveSpreadsheet().getId(), 2018, 123);
+        f(SpreadsheetApp.getActiveSpreadsheet().getId(), 2017, 123);
       } );
 
   }   
@@ -223,6 +234,48 @@ function Seasons() {
      
      
    };   
+
+
+
+
+
+
+   
+   
+   
+   function isValidSpreadSheetYear() {
+      var f = AmisMarketApp.Seasons.isValidSpreadSheetYear;
+     Q.module(arguments.callee.name);
+     
+     
+      Q.test( "undef", function( assert ) {
+         assert.throws(
+            function() {
+               f();
+            },
+           /InvalidArgument/
+         );
+      } );
+      
+      Q.test( "ok", function( assert ) {        
+        assert.ok( f(123, "test2018") );
+      } );
+     
+      Q.test( "false", function( assert ) {        
+        assert.ok( !f(123, "test2017") );
+      } );
+     
+      Q.test( "InvalidDbData", function( assert ) {
+         assert.throws(
+            function() {
+               f(123, "noid");
+            },
+           /InvalidDbData/
+         );
+      } );
+     
+     
+   };   
   
   
   
@@ -240,9 +293,10 @@ function Seasons() {
   
   
   
-  getYearOfSeason();
+  getCurrentYearOfSeason();
   changeSeason();
   newPeriodUpdateNamedRanges();
   newYearUpdateDb();
   newYearUpdateTemplateCompilerCommodity();
+  isValidSpreadSheetYear();
 }; 

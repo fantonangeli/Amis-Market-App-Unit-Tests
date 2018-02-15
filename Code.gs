@@ -6,6 +6,7 @@ function tests(){
   Seasons();
   AmisRange();
   FirebaseConnector();
+  APPCache();
 }
 
 function doGet( e ) {
