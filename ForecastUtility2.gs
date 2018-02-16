@@ -1,5 +1,19 @@
 function ForecastUtility() {
   showTitle(arguments.callee.name);
+  
+     Q.module(arguments.callee.name,{
+       after:function(){
+      AmisMarketApp.AmisNamedRanges.getAllNamedRanges=getAllNamedRanges;
+       }
+     });
+      var getAllNamedRanges=AmisMarketApp.AmisNamedRanges.getAllNamedRanges;
+     
+     AmisMarketApp.AmisNamedRanges.getAllNamedRanges=function(){
+       return getAllNamedRangesMocks;
+     }; 
+     
+
+    
 
    function getFirstFcOfPeriod() {
       var f = AmisMarketApp.ForecastUtility.getFirstFcOfPeriod;
@@ -21,14 +35,14 @@ function ForecastUtility() {
 
 
       Q.test( "rice", function( assert ) {
-        assert.ok( f( 0, "rice" )[1]=="T30:T31" );
-        assert.ok( f( 1, "rice" )[1]=="Y30:Y31" );
+        assert.ok( f( 0, "rice" )[1]=="U30:U31" );
+        assert.ok( f( 1, "rice" )[1]=="Z30:Z31" );
       } );
 
 
       Q.test( "wheat", function( assert ) {
-        assert.ok( f( 0, "wheat" )[3]=="T48:T55" );
-        assert.ok( f( 1, "wheat" )[3]=="Y48:Y55" );
+        assert.ok( f( 0, "wheat" )[3]=="U48:U55" );
+        assert.ok( f( 1, "wheat" )[3]=="Z48:Z55" );
       } );
 
 
@@ -59,31 +73,31 @@ function ForecastUtility() {
 
 
       Q.test( "ranges falses", function( assert ) {
-        assert.ok( !f("S10:S15", comm));
-        assert.ok( !f("T8:U8", comm));
-        assert.ok( !f("Q16:R23", comm));
-        assert.ok( !f("Z17:Z18", comm));
-        assert.ok( !f("U19:U24", comm));
+        assert.ok( !f("T10:T15", comm));
+        assert.ok( !f("U8:V8", comm));
+        assert.ok( !f("R16:S23", comm));
+        assert.ok( !f("AA17:AA18", comm));
+        assert.ok( !f("V19:V24", comm));
       } );
 
 
       Q.test( "cells falses", function( assert ) {
-        assert.ok( !f("W21", comm));
-        assert.ok( !f("S27", comm));
-        assert.ok( !f("Z30", comm));
-        assert.ok( !f("T32", comm));
-        assert.ok( !f("U36", comm));
+        assert.ok( !f("X21", comm));
+        assert.ok( !f("T27", comm));
+        assert.ok( !f("AA30", comm));
+        assert.ok( !f("U32", comm));
+        assert.ok( !f("V36", comm));
       } );
 
 
       Q.test( "trues", function( assert ) {
-        assert.ok( f("T12", comm));
-        assert.ok( f("Y12", comm));
-        assert.ok( f("T15:T16", comm));
-        assert.ok( f("T20:T23", comm));
-        assert.ok( f("Y20:Z22", comm));
-        assert.ok( f("W36:Z36", comm));
-        assert.ok( f("Y49:Y51", comm));
+        assert.ok( f("U12", comm));
+        assert.ok( f("Z12", comm));
+        assert.ok( f("U15:U16", comm));
+        assert.ok( f("U20:U23", comm));
+        assert.ok( f("Z20:AA22", comm));
+        assert.ok( f("X36:AA36", comm));
+        assert.ok( f("Z49:Z51", comm));
       } );
 
 
@@ -119,10 +133,10 @@ function ForecastUtility() {
 
       Q.test( "trues", function( assert ) {
         assert.ok( f("rice").first===3);
-        assert.ok( f("rice").last===18);
-        assert.ok( f("maize").last===18);
-        assert.ok( f("wheat").last===18);
-        assert.ok( f("soybean").last===18);
+        assert.ok( f("rice").last===19);
+        assert.ok( f("maize").last===19);
+        assert.ok( f("wheat").last===19);
+        assert.ok( f("soybean").last===19);
       } );
 
 
